@@ -1,5 +1,6 @@
 from PIL import Image
 import numpy as np
+from skimage.util import random_noise
 
 
 def get_plain_bit(num, plain_num):
@@ -17,6 +18,8 @@ def set_plain_bit(num, ornament_num, plain_num):
         result = num & ornament_zero
     return result
 
+
+sigma = 8
 
 get_plain = np.vectorize(get_plain_bit)
 set_plain = np.vectorize(set_plain_bit)
@@ -43,4 +46,14 @@ extracted_info = set_plain(extracted_info, extracted_plain, 3)
 extracted_info = extracted_info * 255
 extracted_image = Image.fromarray(extracted_info, mode="I")
 extracted_image.show()
+red, green, blue = image.split()
+arr_green = np.array(green)
+temp = np.trunc(arr_green / (2 * sigma)) * 2 * sigma + bit_ornament * sigma
+white_noise = random_noise(np.full((512, 512), 0.5)) * 7
+temp += white_noise
+temp = temp.astype(int)
+modified_green = Image.fromarray(temp, mode="I")
+modified_green = modified_green.convert("L")
+new_image = Image.merge("RGB", (red, modified_green, blue))
+new_image.show()
 print()
