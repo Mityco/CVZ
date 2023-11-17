@@ -92,7 +92,7 @@ plt.ylabel("Y axis")
 plt.plot(x, y, color="red")
 plt.show()
 
-image = Image.open("bridge.tif")
+image = Image.open("../Lab3/bridge.tif")
 
 #print(auto_selection(image))
 
